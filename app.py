@@ -1,20 +1,28 @@
-from flask import Flask
+from flask import Flask, url_for
 
 app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return """
-       <a href='/HAMBUERGUESA'>HAMBUERGUESA</a>
-       <a href='/papas_fritas'>papas_fritas</a>
-       
+    
+    url_hamburguesa = url_for("COMIDA_condimentos", condimentos="chedar")
+    url_papas = url_for("acompañamiento")
+    url_dados = url_for("dado", caras=6)
+    url_sumar = url_for("suma", n1=4, n2=9)
+    url_logo = url_for("static", filename="img/rayo.png")
+    
+    return f"""
+       <a href='{url_hamburguesa}'>HAMBUERGUESA</a>
+       <a href='{url_papas}'>papas_fritas</a>
+       <a href='{url_dados}'>dados</a>
+       <a href='{url_sumar}'>sumar</a>
+       <a href='{url_logo}'>logo</a>
+
 
 """
 
 
-@app.route("/HAMBUERGUESA")
-def COMIDA():
-    return "<h2>amo las hamburgeesas</h2>"
+
 
 @app.route("/HAMBUERGUESA/<string:condimentos>")
 def COMIDA_condimentos(condimentos):
