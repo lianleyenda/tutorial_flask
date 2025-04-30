@@ -45,6 +45,7 @@ def hello_world():
     url_insert = url_for("insertar_usuario", nombre="Lian Leyenda", email="Leyenditas78@gmail.com" )
     url_borar = url_for("borrar_usuario", id=1)
     url_mostrar = url_for("mostrar_usuario", id=2)
+    url_insert = url_for("cambiar_usuario", nombre="tomas", email="Quispe78@gmail.com" )
     
     return f"""
        <ul>
@@ -56,6 +57,7 @@ def hello_world():
        <li><a href='{url_insert}'>insertar usuarios</a></li>
        <li><a href='{url_borar}'>borrar usuarios</a></li>
        <li><a href='{url_mostrar}'>mostrar usuarios</a></li>
+        <li><a href='{url_insert}'>cambiar usuarios</a></li>
       </ul>
 
 """
@@ -140,6 +142,14 @@ def mostrar_usuario(id):
     else:
         return f"No se encontró un usuario con ID {id}"
 
+
+@app.route("/test-db-cambiar/<string:nombre>/<string:email>")
+def cambiar_usuario(nombre,email):
+    abrirConexion()
+    db.execute("UPDATE usuarios SET email = ? WHERE usuario = ?", (email,nombre ,))
+    db.commit()
+    cerrarConexion()
+    return f"cambie el {nombre} y el {email}."
 
 
 
