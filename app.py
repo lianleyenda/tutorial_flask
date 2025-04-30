@@ -42,14 +42,21 @@ def hello_world():
     url_dados = url_for("dado", caras=6)
     url_sumar = url_for("suma", n1=4, n2=9)
     url_logo = url_for("static", filename="img/rayo.png")
+    url_insert = url_for("insertar_usuario", nombre="Lian Leyenda", email="Leyenditas78@gmail.com" )
+    url_borar = url_for("borrar_usuario", id=1)
+    url_mostrar = url_for("mostrar_usuario", id=2)
     
     return f"""
-       <a href='{url_hamburguesa}'>HAMBUERGUESA</a>
-       <a href='{url_papas}'>papas_fritas</a>
-       <a href='{url_dados}'>dados</a>
-       <a href='{url_sumar}'>sumar</a>
-       <a href='{url_logo}'>logo</a>
-
+       <ul>
+       <li><a href='{url_hamburguesa}'>HAMBUERGUESA</a></li>
+       <li><a href='{url_papas}'>papas_fritas</a></li>
+       <li><a href='{url_dados}'>dados</a></li>
+       <li><a href='{url_sumar}'>sumar</a></li>
+       <li><a href='{url_logo}'>logo</a></li>
+       <li><a href='{url_insert}'>insertar usuarios</a></li>
+       <li><a href='{url_borar}'>borrar usuarios</a></li>
+       <li><a href='{url_mostrar}'>mostrar usuarios</a></li>
+      </ul>
 
 """
 
@@ -78,6 +85,61 @@ def dado(caras):
 def suma(n1,n2):
     suma = n1+n2
     return f"<h2>{n1} mas {n2} da {suma}</h2>"
+
+
+
+
+
+db = None
+
+
+def dict_factory(cursor, row):
+  """Arma un diccionario con los valores de la fila."""
+  fields = [column[0] for column in cursor.description]
+  return {key: value for key, value in zip(fields, row)}
+
+
+def abrirConexion():
+   global db
+   db = sqlite3.connect("instance/datos.sqlite")
+   db.row_factory = dict_factory
+
+
+def cerrarConexion():
+   global db
+   db.close()
+   db = None
+
+
+@app.route("/test-db-agregar/<string:nombre>/<string:email>")
+def insertar_usuario(nombre,email):
+    abrirConexion()
+    db.execute("INSERT INTO usuarios(usuario, email) VALUES(?, ?)", (nombre, email))
+    db.commit()
+    cerrarConexion()
+    return f"agregue el {nombre} y el {email}."
+
+@app.route("/test-db-borrar/<int:id>")
+def borrar_usuario(id):
+    abrirConexion()
+    db.execute("DELETE FROM usuarios WHERE id = ?", (id,))
+    db.commit()
+    cerrarConexion()
+    return f"El usuario con ID {id} fue borrado."
+
+@app.route("/test-db-mostrar/<int:id>")
+def mostrar_usuario(id):
+    abrirConexion()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM usuarios WHERE id = ?", (id,))
+    usuario = cursor.fetchall()
+    cerrarConexion()
+
+    if usuario:
+        return f"{usuario}"
+    else:
+        return f"No se encontró un usuario con ID {id}"
+
 
 
 
