@@ -1,4 +1,4 @@
-from flask import Flask, url_for
+from flask import Flask, url_for, render_template
 import sqlite3
 
 
@@ -151,5 +151,18 @@ def cambiar_usuario(nombre,email):
     cerrarConexion()
     return f"cambie el {nombre} y el {email}."
 
+
+@app.route("/test-db-plantilla/<int:id>")
+def mostrar_plantilla(id):
+    abrirConexion()
+    cursor = db.execute("SELECT id, usuario, email FROM usuarios WHERE id = ?", (id,))
+    res = cursor.fetchone()
+    cerrarConexion()
+    usuario = None
+    email = None
+    if res != None:
+        usuario = res['usuario']
+        email = res['email']
+    return render_template("index.html", id=id, usuario=usuario, email=email)
 
 

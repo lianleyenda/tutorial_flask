@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos</title>
+</head>
+<body>
+    {% if usuario == None %}
+         <h1 style="color: red;">No existe el usuario {{id}}</h1>
+
+    {% else %}
+       <h1>usuario con id: {{id}}</h1>
+       <h2>{{usuario}}   {{email}}</h2>
+       {% endif %}
+</body>
+</html>
