@@ -166,3 +166,21 @@ def mostrar_plantilla(id):
     return render_template("index.html", id=id, usuario=usuario, email=email)
 
 
+@app.route("/test-db-pt/<int:id>")
+def mostrar_pt(id):
+    abrirConexion()
+    cursor = db.execute("SELECT * FROM usuarios WHERE id = ?", (id,))
+    res = cursor.fetchone()
+    cerrarConexion()
+    usuario = None
+    email = None
+    telefono = None
+    direccion = None
+    if res != None:
+        usuario = res['usuario']
+        email = res['email']
+        telefono = res['telefono']
+        direccion = res['direccion']
+    return render_template("index2.html", id=id, usuario=usuario, email=email, telefono=telefono, direccion=direccion)
+
+
