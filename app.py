@@ -46,6 +46,8 @@ def hello_world():
     url_borar = url_for("borrar_usuario", id=1)
     url_mostrar = url_for("mostrar_usuario", id=2)
     url_insert = url_for("cambiar_usuario", nombre="tomas", email="Quispe78@gmail.com" )
+    url_todos = url_for("mostrar_td")
+   
     
     return f"""
        <ul>
@@ -57,7 +59,7 @@ def hello_world():
        <li><a href='{url_insert}'>insertar usuarios</a></li>
        <li><a href='{url_borar}'>borrar usuarios</a></li>
        <li><a href='{url_mostrar}'>mostrar usuarios</a></li>
-        <li><a href='{url_insert}'>cambiar usuarios</a></li>
+       <li><a href='{url_insert}'>cambiar usuarios</a></li>
       </ul>
 
 """
@@ -183,4 +185,10 @@ def mostrar_pt(id):
         direccion = res['direccion']
     return render_template("index2.html", id=id, usuario=usuario, email=email, telefono=telefono, direccion=direccion)
 
-
+@app.route("/test-db-td")
+def mostrar_td():
+    abrirConexion()
+    cursor = db.execute("SELECT * FROM usuarios")
+    res = cursor.fetchall()
+    cerrarConexion()
+    return render_template("index3.html", usuarios=res)
